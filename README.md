@@ -1,5 +1,5 @@
-# Program mirip windows paint
-merupakan program membuat objek persegi, garis, dan lingkaran yang mirip dengan windows paint.
+# Program painting objek
+merupakan program membuat image yang berisi objek persegi, garis, kurva, dan lingkaran.
 
 program ini dijalankan menggunakan Netbeans atau yang lain.
 untuk bisa menggunakan library JDBC MYSQL, karena program juga disimpan pada database.
