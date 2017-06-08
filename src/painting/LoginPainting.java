@@ -93,25 +93,15 @@ public class LoginPainting extends javax.swing.JFrame {
     }//GEN-LAST:event_namaActionPerformed
 
     private void loginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginActionPerformed
-        if(nama.getText().length() > 0) {
-            this.setVisible(false);
-            String nama_user = nama.getText();
-            
-            // MENGUBAH SPASI MENJADI '-' JIKA ADA
-            if (nama_user.contains(" ")) {
-                String[] tmp = nama_user.split(" ");
-                nama_user = "";
-                for (String a : tmp) {
-                    if (nama_user.isEmpty()) {
-                        nama_user = a;
-                    } else {
-                        nama_user = nama_user + "-" + a;
-                    }
-                }
+        if (nama.getText().length() > 0) {
+            if (nama.getText().contains(" ")) {
+                JOptionPane.showMessageDialog(this, "Nama tidak boleh mengandung"
+                        + "Spasi !!!");
+            } else {
+                // MEMANGGIL PROGRAM UTAMA
+                this.setVisible(false);
+                new Painting(nama.getText()).setVisible(true);
             }
-            
-            // MEMANGGIL PROGRAM UTAMA
-            new Painting(nama_user).setVisible(true);
         } else {
             JOptionPane.showMessageDialog(this, "Nama tidak boleh kosong !!!");
         }
