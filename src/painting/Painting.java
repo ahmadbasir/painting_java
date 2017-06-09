@@ -1,8 +1,3 @@
-/*
-    ERROR MENYIMPAN KE DATABASE JIKA FILE ADA SPASI >= 2
-*/
-
-
 package painting;
 
 import java.awt.*;
@@ -12,10 +7,10 @@ import java.awt.image.*;
 import java.io.*;
 import java.sql.SQLException;
 import javax.swing.*;
-import javax.imageio.ImageIO;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-public class Painting extends JFrame{
+public class Painting extends JFrame {
+
     private String nama;
     private Container contentPane;
     private JPanel Canvas_Draw;
@@ -24,50 +19,50 @@ public class Painting extends JFrame{
     private int last_x, last_y, npoint;
     private int[] pointX, pointY;
 
-    public Painting(String name){
+    public Painting(String name) {
         nama = name;
-        
+
         this.setTitle("Selamat Datang " + name + " di Painting Objek");
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.setSize(800, 600);
         this.setLocationRelativeTo(null);
         this.setResizable(false);
-        
+
         last_x = last_y = npoint = 0;
-        pointX = new int[3]; 
+        pointX = new int[3];
         pointY = new int[3];
-        
+
         contentPane = getContentPane();
         Canvas_Draw = new JPanel();
-        
+
         tools = new Panel_Tools();
         tools.setBorder(BorderFactory.createLoweredBevelBorder());
-        
+
         color = new Panel_Color(Canvas_Draw);
         color.setBorder(BorderFactory.createLoweredBevelBorder());
 
         GroupLayout layout_canvas = new GroupLayout(Canvas_Draw);
         Canvas_Draw.setLayout(layout_canvas);
         layout_canvas.setHorizontalGroup(
-            layout_canvas.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 800, Short.MAX_VALUE)
+                layout_canvas.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGap(0, 800, Short.MAX_VALUE)
         );
         layout_canvas.setVerticalGroup(
-            layout_canvas.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 500, Short.MAX_VALUE)
+                layout_canvas.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGap(0, 500, Short.MAX_VALUE)
         );
         Canvas_Draw.setBackground(Color.WHITE);
-        
+
         JButton save = new JButton("SIMPAN GAMBAR");
         JPanel color_panel = new JPanel(new BorderLayout());
         color_panel.add(color, BorderLayout.WEST);
         color_panel.add(save, BorderLayout.EAST);
-        
+
         contentPane.setLayout(new BorderLayout());
         contentPane.add(Canvas_Draw, BorderLayout.NORTH);
         contentPane.add(tools, BorderLayout.CENTER);
         contentPane.add(color_panel, BorderLayout.SOUTH);
-        
+
         Canvas_Draw.addMouseListener(new MouseListener() {
             public void mouseClicked(MouseEvent e) {
                 int x = e.getX(), y = e.getY();
@@ -134,11 +129,13 @@ public class Painting extends JFrame{
                 g.dispose();
             }
 
-            public void mouseEntered(MouseEvent e) {}
+            public void mouseEntered(MouseEvent e) {
+            }
 
-            public void mouseExited(MouseEvent e) {}
+            public void mouseExited(MouseEvent e) {
+            }
         });
-        
+
         Canvas_Draw.addMouseMotionListener(new MouseMotionListener() {
             public void mouseDragged(MouseEvent e) {
                 int x = e.getX(), y = e.getY();
@@ -152,9 +149,11 @@ public class Painting extends JFrame{
                     last_y = y;
                 }
             }
-            public void mouseMoved(MouseEvent e) {}
+
+            public void mouseMoved(MouseEvent e) {
+            }
         });
-        
+
         // FUNGSI MENYIMPAN GAMBAR
         save.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -170,47 +169,58 @@ public class Painting extends JFrame{
                     JFileChooser chooser = new JFileChooser();
                     chooser.setFileFilter(new FileNameExtensionFilter("bmp file (.bmp)", "bmp"));
                     if (chooser.showSaveDialog(Canvas_Draw) == JFileChooser.APPROVE_OPTION) {
-                        
+
                         // MENGAMBIL NAMA FILE PADA DIALOG
                         file = chooser.getSelectedFile();
                         String filename = nama + "_" + file.getName();
-                        
+
                         // MENGUBAH SPASI MENJADI '-' JIKA ADA
-                        if(filename.contains(" ")){
+                        if (filename.contains(" ")) {
                             String[] tmp = filename.split(" ");
                             filename = "";
-                            for(String a:tmp){
-                                if(filename.isEmpty()){
+                            for (String a : tmp) {
+                                if (filename.isEmpty()) {
                                     filename = a;
                                 } else {
                                     filename = filename + "-" + a;
                                 }
                             }
                         }
-                        
+
                         // MENAMBAHKAN .bmp JIKA BELUM ADA
-                        if(!filename.endsWith(".bmp"))
+                        if (!filename.endsWith(".bmp")) {
                             filename += ".bmp";
-                                
+                        }
+
                         String fullPathFile = chooser.getCurrentDirectory().toString()
                                 + "/" + filename;
-                        
+
                         // EXPORT JPANEL KE IMAGE .bmp
                         ScreenImage.writeImage(BI, fullPathFile);
-                        
+
                         //SIMPAN KE DATABASE MYSQL
                         boolean saveDb = true;
                         simpanDB db = new simpanDB();
-                        while(saveDb) {
+                        while (saveDb) {
                             try {
                                 db.tambah(nama, filename, file.getName(), fullPathFile);
                                 saveDb = false;
                             } catch (SQLException se) {
-                                db.buatTabel();
+                                try {
+                                    // JIKA BELUM ADA TABEL MAKA AKAN DIBUATKAN
+                                    db.buatTabel();
+                                } catch (SQLException sqe) {
+                                    // JIKA MASIH ERROR
+                                    JOptionPane.showMessageDialog(Canvas_Draw
+                                            , "GAGAL SIMPAN KE DATABASE");
+                                    sqe.printStackTrace();
+                                    saveDb = false;
+                                }
+
                             }
                         }
                         db.closeAll();
-                        
+
                         // NOTIFIKASI JIKA BERHASIL DISIMPAN
                         StringBuffer notif = new StringBuffer("BERHASIL DISIMPAN\n");
                         notif.append("NAMA FILE: " + filename + "\n");
@@ -226,5 +236,5 @@ public class Painting extends JFrame{
             }
         });
     }
-    
+
 }

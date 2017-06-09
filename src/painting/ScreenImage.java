@@ -14,6 +14,8 @@ public class ScreenImage {
 
     public static BufferedImage createImage(Rectangle region)
             throws AWTException {
+        
+        // MEMBUAT GAMBAR DENGAN ROBOT YANG MENANGKAP SCREEN PADA CANVAS_DRAW
         BufferedImage image = new Robot().createScreenCapture(region);
         return image;
     }
