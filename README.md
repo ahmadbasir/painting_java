@@ -13,11 +13,20 @@ pada file **src/painting/simpanDB.java** ubahlah pada DB keneksinya
 ```
 Tabel untuk penyimpanan record akan otomatis terbentuk
 
-| pengguna |	|file|
-|:----------:|  |----|
-|id|		|nama|
-|user|		|objek|
+**Tabel pengguna**
+
+| pengguna |
+|:----------:|
+|id|
+|user|
 |file|
 |path|
+
+**Tabel file**
+
+|file|
+|----|
+|nama|
+|objek|
 
 # NB Error pada penyimpanan gambar jika nama file memiliki spasi lebih dari 1
