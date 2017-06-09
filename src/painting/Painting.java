@@ -160,7 +160,7 @@ public class Painting extends JFrame{
             public void actionPerformed(ActionEvent e) {
                 try {
                     // SETTING PANEL KE GAMBAR
-                    Point p = rootPane.getLocationOnScreen();
+                    Point p = Canvas_Draw.getLocationOnScreen();
                     Dimension d = new Dimension(Canvas_Draw.getWidth(), Canvas_Draw.getHeight());
                     Rectangle r = new Rectangle(p, d);
                     BufferedImage BI = ScreenImage.createImage(r);
@@ -195,7 +195,7 @@ public class Painting extends JFrame{
                         String fullPathFile = chooser.getCurrentDirectory().toString()
                                 + "/" + filename;
                         
-                        // OUTPUT GAMBAR FILE
+                        // EXPORT JPANEL KE IMAGE .bmp
                         ScreenImage.writeImage(BI, fullPathFile);
                         
                         //SIMPAN KE DATABASE MYSQL
